@@ -1,6 +1,6 @@
 # Интернет-магазин обуви
 
-![ER-диаграмма онлайн-магазина](https://github.com/Vadimchik228/ShoeStore/blob/master/ER-diagramm.png)
+![ER-диаграмма онлайн-магазина](https://github.com/Vadimchik228/ShoeStore/blob/main/ER-diagramm.png)
 
 ## Требования к проекту
 * На главной странице размещена основная информация об интернет-магазине: 
