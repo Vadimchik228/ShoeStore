@@ -1,0 +1,4 @@
+databaseChangeLog: # Определяется главный файл изменений.
+  - includeAll: # Включает все файлы изменений из папки changesets, расположенной относительно файла db.changelog.yaml
+      path: /changesets
+      relativeToChangelogFile: true
