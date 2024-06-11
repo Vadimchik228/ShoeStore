@@ -11,6 +11,10 @@ import com.vasche.shoestore.repository.OrderRepository;
 import com.vasche.shoestore.repository.UserRepository;
 import com.vasche.shoestore.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "OrderService::getById", key = "#id")
     public Order getById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found."));
@@ -47,6 +52,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    @Caching(put = @CachePut(value = "OrderService::getById", key = "order.id"))
     public Order update(Order order) {
         if (userRepository.findById(order.getUserId()).isEmpty()) {
             throw new IllegalStateException("There is no such user in the database.");
@@ -57,6 +63,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    @Caching(cacheable = @Cacheable(value = "OrderService::getById", key = "order.id"))
     public Order create(Order order, Long userId) {
         if (userRepository.findById(order.getUserId()).isEmpty()) {
             throw new IllegalStateException("There is no such user in the database.");
@@ -81,6 +88,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "OrderService::getById", key = "#id")
     public void delete(Long id) {
         orderRepository.delete(id);
     }

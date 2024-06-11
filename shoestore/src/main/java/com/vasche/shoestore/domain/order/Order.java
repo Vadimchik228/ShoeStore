@@ -2,11 +2,11 @@ package com.vasche.shoestore.domain.order;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class Order {
+public class Order implements Serializable {
 
     private Long id;
     private LocalDateTime orderTime;

@@ -9,6 +9,10 @@ import com.vasche.shoestore.domain.shoe.ShoeModel;
 import com.vasche.shoestore.repository.ShoeRepository;
 import com.vasche.shoestore.service.ShoeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +26,7 @@ public class ShoeServiceImpl implements ShoeService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "ShoeService::getById", key = "#id")
     public Shoe getById(Long id) {
         return shoeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Shoe not found."));
@@ -35,6 +40,7 @@ public class ShoeServiceImpl implements ShoeService {
 
     @Override
     @Transactional
+    @Caching(put = @CachePut(value = "ShoeService::getById", key = "shoe.id"))
     public Shoe update(Shoe shoe) {
         if (shoe.getShoeModel() == null) {
             shoe.setShoeModel(ShoeModel.SHOES);
@@ -51,6 +57,7 @@ public class ShoeServiceImpl implements ShoeService {
 
     @Override
     @Transactional
+    @Caching(cacheable = @Cacheable(value = "ShoeService::getById", key = "shoe.id"))
     public Shoe create(Shoe shoe) {
         if (shoe.getShoeModel() == null) {
             shoe.setShoeModel(ShoeModel.SHOES);
@@ -67,6 +74,7 @@ public class ShoeServiceImpl implements ShoeService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "ShoeService::getById", key = "#id")
     public void delete(Long id) {
         shoeRepository.delete(id);
     }

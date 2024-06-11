@@ -2,11 +2,11 @@ package com.vasche.shoestore.domain.shoe;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Set;
 
 @Data
-public class Shoe {
+public class Shoe implements Serializable {
 
     private Long id;
     private String title;

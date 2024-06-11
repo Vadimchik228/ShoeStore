@@ -1,21 +1,27 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
+  cache:
+    type: redis
+    cache-names: redis-cache
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
+      password: ${REDIS_PASSWORD}
   datasource:
-    url: jdbc:postgresql://localhost:5432/shoestore?currentSchema=shoestore
-    username: postgres
-    password: 1
+    url: jdbc:postgresql://${HOST}:5432/${POSTGRES_DATABASE}?currentSchema=${POSTGRES_SCHEMA}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
-  sql:
-    init:
-      mode: never
-      continue-on-error: false
   liquibase:
     change-log: classpath:liquibase/db.changelog.yaml
-    enabled: false
+    enabled: true
     default-schema: shoestore
 security:
   jwt:
-    secret: Z2ZkZGZnZnRnZnNnZ2dmZ2RmaGdoZ2Zkd2dzZGZkZGZMS0hHQk5WVkZHR0VISkJO
-    access: 3600000
-    refresh: 2592000000
+    secret: ${JWT_SECRET}
+    access: 1
+    refresh: 30
 springdoc:
   override-with-generic-response: false
