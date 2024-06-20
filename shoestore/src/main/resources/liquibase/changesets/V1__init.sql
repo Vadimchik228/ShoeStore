@@ -27,6 +27,14 @@ CREATE TABLE IF NOT EXISTS shoes
     size        INTEGER         NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS shoes_images
+(
+    shoe_id     BIGINT          NOT NULL,
+    image       TEXT            NOT NULL,
+    CONSTRAINT fk_shoes_images_shoes FOREIGN KEY (shoe_id)
+        REFERENCES shoes (id) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
 CREATE TABLE IF NOT EXISTS cart_items
 (
     id          BIGSERIAL       PRIMARY KEY,

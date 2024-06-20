@@ -1,8 +1,10 @@
 package com.vasche.shoestore.config;
 
 
+import com.vasche.shoestore.service.props.MinioProperties;
 import com.vasche.shoestore.web.security.JwtTokenFilter;
 import com.vasche.shoestore.web.security.JwtTokenProvider;
+import io.minio.MinioClient;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -28,11 +30,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true) // Включает поддержку аннотаций Spring Security для методов (@PreAuthorize)
-@RequiredArgsConstructor(onConstructor = @__(@Lazy)) // @Lazy: Указывает, что зависимость tokenProvider должна быть инициализирована только по требованию.
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class ApplicationConfig {
 
     private final JwtTokenProvider tokenProvider;
+    private final MinioProperties minioProperties;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,16 +47,17 @@ public class ApplicationConfig {
         return configuration.getAuthenticationManager();
     }
 
-    /**
-     * Этот метод создает конфигурацию для Swagger,
-     * которая указывается в документации API,
-     * что в вашем приложении используется аутентификация с использованием JWT-токенов,
-     * которые передаются в заголовке запроса с префиксом “Bearer”.
-     */
+    @Bean
+    public MinioClient minioClient() {
+        return MinioClient.builder()
+                .endpoint(minioProperties.getUrl())
+                .credentials(minioProperties.getAccessKey(),
+                        minioProperties.getSecretKey())
+                .build();
+    }
+
     @Bean
     public OpenAPI openAPI() {
-        // OpenAPI - это базовый объект конфигурации Swagger, который содержит информацию об API,
-        // такую как название, описание, версию, схемы безопасности и т.д.
         return new OpenAPI()
                 .addSecurityItem(new SecurityRequirement()
                         .addList("bearerAuth"))
@@ -67,7 +71,7 @@ public class ApplicationConfig {
                                 )
                 )
                 .info(new Info()
-                        .title("ShoeStore API")
+                        .title("Task list API")
                         .description("Demo Spring Boot application")
                         .version("1.0")
                 );
