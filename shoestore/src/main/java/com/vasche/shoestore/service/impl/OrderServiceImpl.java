@@ -8,7 +8,6 @@ import com.vasche.shoestore.domain.orderItem.Status;
 import com.vasche.shoestore.repository.CartItemRepository;
 import com.vasche.shoestore.repository.OrderItemRepository;
 import com.vasche.shoestore.repository.OrderRepository;
-import com.vasche.shoestore.repository.UserRepository;
 import com.vasche.shoestore.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -28,11 +27,10 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
     private final OrderItemRepository orderItemRepository;
-    private final UserRepository userRepository;
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "OrderService::getById", key = "#id")
+//    @Cacheable(value = "OrderService::getById", key = "#id")
     public Order getById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found."));
@@ -52,34 +50,28 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    @Caching(put = @CachePut(value = "OrderService::getById", key = "order.id"))
+//    @Caching(put = @CachePut(value = "OrderService::getById", key = "order.id"))
     public Order update(Order order) {
-        if (userRepository.findById(order.getUserId()).isEmpty()) {
-            throw new IllegalStateException("There is no such user in the database.");
-        }
-        orderRepository.update(order);
+        orderRepository.save(order);
         return order;
     }
 
     @Override
     @Transactional
-    @Caching(cacheable = @Cacheable(value = "OrderService::getById", key = "order.id"))
+//    @Caching(cacheable = @Cacheable(value = "OrderService::getById", key = "order.id"))
     public Order create(Order order, Long userId) {
-        if (userRepository.findById(order.getUserId()).isEmpty()) {
-            throw new IllegalStateException("There is no such user in the database.");
-        }
         List<CartItem> cartItems = cartItemRepository.findAllByUserId(userId);
         if (!cartItems.isEmpty()) {
             order.setOrderTime(LocalDateTime.now());
-            orderRepository.create(order);
+            orderRepository.save(order);
             for (CartItem item : cartItems) {
                 OrderItem orderItem = new OrderItem();
-                orderItem.setOrderId(order.getId());
-                orderItem.setShoeId(item.getShoeId());
+                orderItem.setOrder(order);
+                orderItem.setShoe(item.getShoe());
                 orderItem.setQuantity(item.getQuantity());
                 orderItem.setStatus(Status.IN_ASSEMBLY);
-                orderItemRepository.create(orderItem);
-                cartItemRepository.delete(item.getId());
+                orderItemRepository.save(orderItem);
+                cartItemRepository.deleteById(item.getId());
             }
             return order;
         }
@@ -88,8 +80,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "OrderService::getById", key = "#id")
+//    @CacheEvict(value = "OrderService::getById", key = "#id")
     public void delete(Long id) {
-        orderRepository.delete(id);
+        orderRepository.deleteById(id);
     }
 }

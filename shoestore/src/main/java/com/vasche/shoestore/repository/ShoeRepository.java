@@ -1,18 +1,21 @@
 package com.vasche.shoestore.repository;
 
+
 import com.vasche.shoestore.domain.shoe.Shoe;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-import java.util.Optional;
+public interface ShoeRepository extends JpaRepository<Shoe, Long> {
 
-public interface ShoeRepository {
-    Optional<Shoe> findById(Long id);
-
-    List<Shoe> findAll();
-
-    void update(Shoe shoe);
-
-    void create(Shoe shoe);
-
-    void delete(Long id);
+    @Modifying
+    @Query(value = """
+            INSERT INTO shoestore.shoes_images (shoe_id, image)
+            VALUES (:id, :fileName)
+            """, nativeQuery = true)
+    void addImage(
+            @Param("id") Long id,
+            @Param("fileName") String fileName
+    );
 }

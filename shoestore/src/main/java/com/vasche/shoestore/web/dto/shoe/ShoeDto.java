@@ -1,5 +1,6 @@
 package com.vasche.shoestore.web.dto.shoe;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vasche.shoestore.domain.shoe.Season;
 import com.vasche.shoestore.domain.shoe.Sex;
 import com.vasche.shoestore.domain.shoe.ShoeModel;
@@ -12,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Schema(description = "Shoe DTO")
@@ -60,5 +62,8 @@ public class ShoeDto {
             message = "Size must be at most 10."
     )
     private Integer size;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private List<String> images;
 
 }

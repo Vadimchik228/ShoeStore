@@ -3,6 +3,7 @@ package com.vasche.shoestore.web.controller;
 
 import com.vasche.shoestore.domain.exception.AccessDeniedException;
 import com.vasche.shoestore.domain.exception.ExceptionBody;
+import com.vasche.shoestore.domain.exception.ImageUploadException;
 import com.vasche.shoestore.domain.exception.ResourceNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -79,13 +80,22 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handleAuthentication(final AuthenticationException e) {
         log.info(e.getMessage());
+        e.printStackTrace();
         return new ExceptionBody("Authentication failed.");
+    }
+
+    @ExceptionHandler(ImageUploadException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handleImageUpload(final ImageUploadException e) {
+        log.error(e.getMessage());
+        return new ExceptionBody(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionBody handleException(final Exception e) {
         log.error(e.getMessage());
+        e.printStackTrace();
         return new ExceptionBody("Internal error.");
     }
 

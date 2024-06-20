@@ -2,11 +2,9 @@ package com.vasche.shoestore.service.impl;
 
 
 import com.vasche.shoestore.domain.exception.ResourceNotFoundException;
-import com.vasche.shoestore.domain.shoe.Season;
-import com.vasche.shoestore.domain.shoe.Sex;
-import com.vasche.shoestore.domain.shoe.Shoe;
-import com.vasche.shoestore.domain.shoe.ShoeModel;
+import com.vasche.shoestore.domain.shoe.*;
 import com.vasche.shoestore.repository.ShoeRepository;
+import com.vasche.shoestore.service.ImageService;
 import com.vasche.shoestore.service.ShoeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -23,10 +21,11 @@ import java.util.List;
 public class ShoeServiceImpl implements ShoeService {
 
     private final ShoeRepository shoeRepository;
+    private final ImageService imageService;
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "ShoeService::getById", key = "#id")
+//    @Cacheable(value = "ShoeService::getById", key = "#id")
     public Shoe getById(Long id) {
         return shoeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Shoe not found."));
@@ -40,7 +39,7 @@ public class ShoeServiceImpl implements ShoeService {
 
     @Override
     @Transactional
-    @Caching(put = @CachePut(value = "ShoeService::getById", key = "shoe.id"))
+//    @Caching(put = @CachePut(value = "ShoeService::getById", key = "shoe.id"))
     public Shoe update(Shoe shoe) {
         if (shoe.getShoeModel() == null) {
             shoe.setShoeModel(ShoeModel.SHOES);
@@ -51,13 +50,13 @@ public class ShoeServiceImpl implements ShoeService {
         if (shoe.getSex() == null) {
             shoe.setSex(Sex.UNISEX);
         }
-        shoeRepository.update(shoe);
+        shoeRepository.save(shoe);
         return shoe;
     }
 
     @Override
     @Transactional
-    @Caching(cacheable = @Cacheable(value = "ShoeService::getById", key = "shoe.id"))
+//    @Caching(cacheable = @Cacheable(value = "ShoeService::getById", key = "shoe.id"))
     public Shoe create(Shoe shoe) {
         if (shoe.getShoeModel() == null) {
             shoe.setShoeModel(ShoeModel.SHOES);
@@ -68,14 +67,22 @@ public class ShoeServiceImpl implements ShoeService {
         if (shoe.getSex() == null) {
             shoe.setSex(Sex.UNISEX);
         }
-        shoeRepository.create(shoe);
+        shoeRepository.save(shoe);
         return shoe;
     }
 
     @Override
     @Transactional
-    @CacheEvict(value = "ShoeService::getById", key = "#id")
+//    @CacheEvict(value = "ShoeService::getById", key = "#id")
     public void delete(Long id) {
-        shoeRepository.delete(id);
+        shoeRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+//    @CacheEvict(value = "ShoeService::getById", key = "#id")
+    public void uploadImage(final Long id, final ShoeImage image) {
+        String fileName = imageService.upload(image);
+        shoeRepository.addImage(id, fileName);
     }
 }

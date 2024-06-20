@@ -6,6 +6,7 @@ import com.vasche.shoestore.domain.orderItem.OrderItem;
 import com.vasche.shoestore.domain.orderItem.Status;
 import com.vasche.shoestore.repository.OrderItemRepository;
 import com.vasche.shoestore.service.OrderItemService;
+import com.vasche.shoestore.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -21,11 +22,11 @@ import java.util.List;
 public class OrderItemServiceImpl implements OrderItemService {
 
     private final OrderItemRepository orderItemRepository;
-
+    private final OrderService orderService;
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "OrderItemService::getById", key = "#id")
+//    @Cacheable(value = "OrderItemService::getById", key = "#id")
     public OrderItem getById(Long id) {
         return orderItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order item not found."));
@@ -45,9 +46,9 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     @Transactional
-    @Caching(put = @CachePut(value = "OrderItemService::getById", key = "orderItem.id"))
+//    @Caching(put = @CachePut(value = "OrderItemService::getById", key = "orderItem.id"))
     public OrderItem update(OrderItem orderItem) {
-        orderItemRepository.update(orderItem);
+        orderItemRepository.save(orderItem);
         return orderItem;
     }
 
@@ -55,18 +56,18 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Transactional
     public OrderItem create(CartItem cartItem, Long orderId) {
         OrderItem orderItem = new OrderItem();
-        orderItem.setOrderId(orderId);
-        orderItem.setShoeId(cartItem.getShoeId());
+        orderItem.setOrder(orderService.getById(orderId));
+        orderItem.setShoe(cartItem.getShoe());
         orderItem.setQuantity(cartItem.getQuantity());
         orderItem.setStatus(Status.IN_ASSEMBLY);
-        orderItemRepository.create(orderItem);
+        orderItemRepository.save(orderItem);
         return orderItem;
     }
 
     @Override
     @Transactional
-    @CacheEvict(value = "OrderItemService::getById", key = "#id")
+//    @CacheEvict(value = "OrderItemService::getById", key = "#id")
     public void delete(Long id) {
-        orderItemRepository.delete(id);
+        orderItemRepository.deleteById(id);
     }
 }

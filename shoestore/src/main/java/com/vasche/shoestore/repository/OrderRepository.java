@@ -1,22 +1,28 @@
 package com.vasche.shoestore.repository;
 
 import com.vasche.shoestore.domain.order.Order;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface OrderRepository {
+public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    Optional<Order> findById(Long id);
-
-    List<Order> findAllByUserId(Long userId);
-
-    List<Order> findAll();
-
-    void update(Order order);
-
-    void create(Order order);
-
-    void delete(Long id);
+    @Query(value = """
+            SELECT o.id,
+                   order_time,
+                   first_name,
+                   last_name,
+                   city,
+                   address,
+                   email,
+                   phone_number,
+                   user_id
+            FROM shoestore.orders o
+            JOIN shoestore.users u on u.id = o.user_id
+            WHERE u.id = :userId
+            """, nativeQuery = true)
+    List<Order> findAllByUserId(@Param("userId") Long userId);
 
 }

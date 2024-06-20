@@ -1,13 +1,17 @@
 package com.vasche.shoestore.web.controller;
 
 import com.vasche.shoestore.domain.shoe.Shoe;
+import com.vasche.shoestore.domain.shoe.ShoeImage;
 import com.vasche.shoestore.service.ShoeService;
 import com.vasche.shoestore.web.dto.shoe.ShoeDto;
+import com.vasche.shoestore.web.dto.shoe.ShoeImageDto;
 import com.vasche.shoestore.web.dto.validation.OnCreate;
 import com.vasche.shoestore.web.dto.validation.OnUpdate;
+import com.vasche.shoestore.web.mappers.ShoeImageMapper;
 import com.vasche.shoestore.web.mappers.ShoeMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.executable.ValidateOnExecution;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +28,7 @@ public class ShoeController {
 
     private final ShoeService shoeService;
     private final ShoeMapper shoeMapper;
+    private final ShoeImageMapper shoeImageMapper;
 
     @GetMapping("/{id}")
     @Operation(summary = "Get shoe by id")
@@ -62,6 +67,15 @@ public class ShoeController {
     @PreAuthorize("@customSecurityExpression.hasAdminRights()")
     public void deleteById(@PathVariable Long id) {
         shoeService.delete(id);
+    }
+
+    @PostMapping("/{id}/image")
+    @Operation(summary = "Upload image to shoe")
+    @PreAuthorize("@customSecurityExpression.hasAdminRights()")
+    public void uploadImage(@PathVariable Long id,
+                            @Validated @ModelAttribute ShoeImageDto imageDto) {
+        ShoeImage image = shoeImageMapper.toEntity(imageDto);
+        shoeService.uploadImage(id, image);
     }
 
 }
