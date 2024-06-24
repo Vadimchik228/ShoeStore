@@ -6,7 +6,7 @@
 
 ## Стек
 
-`Java 17`, `Maven`, `Spring (Web, Data, Security)`, `PostrgreSQL`, `Liquibase`, `JWT`, `MapStruct`, `Lombok`, `TestContainers`, `Mockito`, `Swagger`, `Docker`, `Minio`, 'Mail'
+`Java 17`, `Maven`, `Spring (Web, Data, Security)`, `PostrgreSQL`, `Liquibase`, `JWT`, `MapStruct`, `Lombok`, `TestContainers`, `Mockito`, `Swagger`, `Docker`, `Minio`, `Mail`
 
 
 ## Реализованый функционал
@@ -31,12 +31,13 @@
 
 ### Пользователь
 
+- Регистрация (сообщение об успешной регистрации приходит на почту) 
 - Вход в систему
 - Редактирование информации о себе
 - Просмотр список всех товаров
 - Добавление товара в корзину
 - Удаление товара из корзины
-- Осуществление заказа выбранных товаров
+- Осуществление заказа выбранных товаров (сообщение о пришедшем на ПВЗ товаре приодит на почту)
 - Выход из системы
 
 ## База данных
