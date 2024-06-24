@@ -3,7 +3,7 @@ package com.vasche.shoestore.web.security;
 import com.vasche.shoestore.domain.exception.AccessDeniedException;
 import com.vasche.shoestore.domain.user.Role;
 import com.vasche.shoestore.domain.user.User;
-import com.vasche.shoestore.service.UserService;
+import com.vasche.shoestore.repository.UserRepository;
 import com.vasche.shoestore.service.props.JwtProperties;
 import com.vasche.shoestore.web.dto.auth.JwtResponse;
 import io.jsonwebtoken.Claims;
@@ -33,7 +33,7 @@ public class JwtTokenProvider {
     private final JwtProperties jwtProperties;
 
     private final UserDetailsService userDetailsService;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private SecretKey key;
 
     @PostConstruct
@@ -93,7 +93,7 @@ public class JwtTokenProvider {
             throw new AccessDeniedException();
         }
         Long userId = Long.valueOf(getId(refreshToken));
-        User user = userService.getById(userId);
+        User user = userRepository.getById(userId);
         jwtResponse.setId(userId);
         jwtResponse.setUsername(user.getUsername());
         jwtResponse.setAccessToken(

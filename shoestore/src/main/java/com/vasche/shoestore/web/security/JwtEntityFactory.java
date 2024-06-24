@@ -11,9 +11,7 @@ import java.util.stream.Collectors;
 
 public final class JwtEntityFactory {
 
-    public static JwtEntity create(
-            final User user
-    ) {
+    public static JwtEntity create(final User user) {
         return new JwtEntity(
                 user.getId(),
                 user.getUsername(),
@@ -23,9 +21,7 @@ public final class JwtEntityFactory {
         );
     }
 
-    private static List<GrantedAuthority> mapToGrantedAuthorities(
-            final List<Role> roles
-    ) {
+    private static List<GrantedAuthority> mapToGrantedAuthorities(final List<Role> roles) {
         return roles.stream()
                 .map(Enum::name)
                 .map(SimpleGrantedAuthority::new)

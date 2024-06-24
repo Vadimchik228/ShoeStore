@@ -8,11 +8,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @Schema(description = "Order DTO")
-public class OrderDto {
+public class OrderDto implements Serializable {
 
     @NotNull(
             message = "Id must be not null.",

@@ -4,6 +4,7 @@ import com.vasche.shoestore.domain.order.Order;
 import com.vasche.shoestore.domain.shoe.Shoe;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -18,9 +19,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "order_items")
 public class OrderItem implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 3L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

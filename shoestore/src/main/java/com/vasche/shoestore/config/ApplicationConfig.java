@@ -83,23 +83,16 @@ public class ApplicationConfig {
             final HttpSecurity httpSecurity
     ) {
         httpSecurity
-                .csrf(AbstractHttpConfigurer::disable) // CSRF — это тип атаки, при которой злоумышленник заставляет
-                // пользователя выполнить нежелательные действия на веб-сайте. CSRF защита отключена,
-                // так как приложение использует JWT-аутентификацию, которая уже обеспечивает защиту от CSRF.
-                .cors(AbstractHttpConfigurer::disable) // CORS — это механизм, который позволяет веб-сайтам
-                // с разных доменов взаимодействовать друг с другом.  CORS защита отключена,
-                // так как приложение не использует функции CORS.
-                .httpBasic(AbstractHttpConfigurer::disable) // HTTP Basic аутентификация — это простой механизм аутентификации,
-                // который передает имя пользователя и пароль в заголовке HTTP-запроса. HTTP Basic аутентификация отключена,
-                // так как приложение использует JWT-аутентификацию.
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagement ->
                         sessionManagement
                                 .sessionCreationPolicy(
-                                        SessionCreationPolicy.STATELESS // приложение использует не HTTP-сессии для хранения инфы о пользователях, а JWT
+                                        SessionCreationPolicy.STATELESS
                                 )
                 )
                 .exceptionHandling(configurer ->
-                        // AuthenticationEntryPoint вызывается, если пользователь не авторизован для доступа к запрошенному ресурсу
                         configurer.authenticationEntryPoint(
                                         (request, response, exception) -> {
                                             response.setStatus(
@@ -109,7 +102,6 @@ public class ApplicationConfig {
                                             response.getWriter()
                                                     .write("Unauthorized.");
                                         })
-                                // AccessDeniedHandler вызывается, если пользователь авторизован, но не имеет прав доступа к запрошенному ресурсу
                                 .accessDeniedHandler(
                                         (request, response, exception) -> {
                                             response.setStatus(
@@ -119,16 +111,15 @@ public class ApplicationConfig {
                                             response.getWriter()
                                                     .write("Unauthorized.");
                                         }))
-                // Настраиваем правила авторизации для разных URL-адресов
                 .authorizeHttpRequests(configurer ->
                         configurer.requestMatchers("/api/v1/auth/**")
-                                .permitAll() // Разрешаем доступ ко всем URL-адресам, которые начинаются с /api/v1/auth/**
+                                .permitAll()
                                 .requestMatchers("/swagger-ui/**")
                                 .permitAll()
                                 .requestMatchers("/v3/api-docs/**")
                                 .permitAll()
-                                .anyRequest().authenticated()) // Требуем аутентификацию для всех остальных URL-адресов
-                .anonymous(AbstractHttpConfigurer::disable) // Отключаем анонимный доступ, т.к. требуется аутентификация для всех ресурсов
+                                .anyRequest().authenticated())
+                .anonymous(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new JwtTokenFilter(tokenProvider),
                         UsernamePasswordAuthenticationFilter.class);
 

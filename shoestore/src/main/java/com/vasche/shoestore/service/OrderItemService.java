@@ -2,20 +2,22 @@ package com.vasche.shoestore.service;
 
 import com.vasche.shoestore.domain.cartItem.CartItem;
 import com.vasche.shoestore.domain.orderItem.OrderItem;
+import com.vasche.shoestore.web.dto.cartItem.CartItemDto;
+import com.vasche.shoestore.web.dto.orderItem.OrderItemDto;
 
 import java.util.List;
 
 public interface OrderItemService {
 
-    OrderItem getById(Long id);
+    OrderItemDto getById(Long id);
 
-    List<OrderItem> getAllByOrderId(Long orderId);
+    List<OrderItemDto> getAllByOrderId(Long orderId);
 
-    List<OrderItem> getAllByUserId(Long userId);
+    List<OrderItemDto> getAllByUserId(Long userId);
 
-    OrderItem update(OrderItem orderItem);
+    OrderItemDto update(OrderItemDto orderItemDto);
 
-    OrderItem create(CartItem cartItem, Long orderId);
+    OrderItemDto create(CartItemDto cartItemDto, Long orderId);
 
     void delete(Long id);
 

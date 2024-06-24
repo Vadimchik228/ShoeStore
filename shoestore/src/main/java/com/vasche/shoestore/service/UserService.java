@@ -1,15 +1,15 @@
 package com.vasche.shoestore.service;
 
-import com.vasche.shoestore.domain.user.User;
+import com.vasche.shoestore.web.dto.user.UserDto;
 
 public interface UserService {
-    User getById(Long id);
+    UserDto getById(Long id);
 
-    User getByUsername(String username);
+    UserDto getByUsername(String username);
 
-    User update(User user);
+    UserDto update(UserDto userDto);
 
-    User create(User user);
+    UserDto create(UserDto userDto);
 
     boolean isCartItemOwner(Long userId, Long cartItemId);
 

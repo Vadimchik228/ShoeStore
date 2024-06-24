@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -24,9 +25,7 @@ public class ImageServiceImpl implements ImageService {
     private final MinioProperties minioProperties;
 
     @Override
-    public String upload(
-            final ShoeImage image
-    ) {
+    public String upload(final ShoeImage image) {
         try {
             createBucket();
         } catch (Exception e) {
@@ -61,26 +60,19 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
-    private String generateFileName(
-            final MultipartFile file
-    ) {
+    private String generateFileName(final MultipartFile file) {
         String extension = getExtension(file);
         return UUID.randomUUID() + "." + extension;
     }
 
-    private String getExtension(
-            final MultipartFile file
-    ) {
-        return file.getOriginalFilename()
+    private String getExtension(final MultipartFile file) {
+        return Objects.requireNonNull(file.getOriginalFilename())
                 .substring(file.getOriginalFilename()
                                    .lastIndexOf(".") + 1);
     }
 
     @SneakyThrows
-    private void saveImage(
-            final InputStream inputStream,
-            final String fileName
-    ) {
+    private void saveImage(final InputStream inputStream, final String fileName) {
         minioClient.putObject(PutObjectArgs.builder()
                 .stream(inputStream, inputStream.available(), -1)
                 .bucket(minioProperties.getBucket())

@@ -9,16 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-
-/**
- * Класс CustomSecurityExpression.
- * Предоставляет набор методов, которые выполняют проверки доступа для различных ресурсов.
- * Он используется Spring Security для определения, может ли текущий пользователь получить доступ
- * к определенным ресурсам на основе его роли и других условий.
- */
-
 @Service("customSecurityExpression")
-// customSecurityExpression - имя, которое будет использоваться для этого сервиса при автопровождении зависимостей.
 @RequiredArgsConstructor
 public class CustomSecurityExpression {
 

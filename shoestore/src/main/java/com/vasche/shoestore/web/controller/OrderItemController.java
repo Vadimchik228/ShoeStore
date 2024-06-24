@@ -28,33 +28,28 @@ public class OrderItemController {
     @Operation(summary = "Get order item by id")
     @PreAuthorize("@customSecurityExpression.canAccessOrderItem(#id)")
     public OrderItemDto getById(@PathVariable Long id) {
-        OrderItem orderItem = orderItemService.getById(id);
-        return orderItemMapper.toDto(orderItem);
+        return orderItemService.getById(id);
     }
 
     @GetMapping("/{userId}/orderItems")
     @Operation(summary = "Get all user's order items")
     @PreAuthorize("@customSecurityExpression.canAccessUser(#userId)")
     public List<OrderItemDto> getOrderItemsByUserId(@PathVariable Long userId) {
-        List<OrderItem> items = orderItemService.getAllByUserId(userId);
-        return orderItemMapper.toDto(items);
+        return orderItemService.getAllByUserId(userId);
     }
 
     @GetMapping("/{orderId}/items")
     @Operation(summary = "Get all order items by orderId")
     @PreAuthorize("@customSecurityExpression.hasAdminRights()")
     public List<OrderItemDto> getOrderItemsByOrderId(@PathVariable Long orderId) {
-        List<OrderItem> items = orderItemService.getAllByOrderId(orderId);
-        return orderItemMapper.toDto(items);
+        return orderItemService.getAllByOrderId(orderId);
     }
 
     @PutMapping
     @Operation(summary = "Update order item")
     @PreAuthorize("@customSecurityExpression.hasAdminRights()")
     public OrderItemDto update(@Validated(OnUpdate.class) @RequestBody OrderItemDto dto) {
-        OrderItem item = orderItemMapper.toEntity(dto);
-        OrderItem returnedItem = orderItemService.update(item);
-        return orderItemMapper.toDto(returnedItem);
+        return orderItemService.update(dto);
     }
 
     @DeleteMapping("/{id}")

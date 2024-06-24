@@ -4,9 +4,8 @@ import com.vasche.shoestore.domain.orderItem.OrderItem;
 import com.vasche.shoestore.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +18,7 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "orders")
-public class Order implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 4L;
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,6 +49,7 @@ public class Order implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<OrderItem> orderItems = new ArrayList<>();
 }

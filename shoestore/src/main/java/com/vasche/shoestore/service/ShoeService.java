@@ -1,19 +1,19 @@
 package com.vasche.shoestore.service;
 
-import com.vasche.shoestore.domain.shoe.Shoe;
 import com.vasche.shoestore.domain.shoe.ShoeImage;
+import com.vasche.shoestore.web.dto.shoe.ShoeDto;
 
 import java.util.List;
 
 public interface ShoeService {
 
-    Shoe getById(Long id);
+    ShoeDto getById(Long id);
 
-    List<Shoe> getAll();
+    List<ShoeDto> getAll();
 
-    Shoe update(Shoe shoe);
+    ShoeDto update(ShoeDto shoeDto);
 
-    Shoe create(Shoe shoe);
+    ShoeDto create(ShoeDto shoeDto);
 
     void delete(Long id);
 

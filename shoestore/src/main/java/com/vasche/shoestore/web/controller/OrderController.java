@@ -22,39 +22,33 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-    private final OrderMapper orderMapper;
 
     @GetMapping("/{id}")
     @Operation(summary = "Get order by id")
     @PreAuthorize("@customSecurityExpression.canAccessOrder(#id)")
     public OrderDto getById(@PathVariable Long id) {
-        Order order = orderService.getById(id);
-        return orderMapper.toDto(order);
+        return orderService.getById(id);
     }
 
     @GetMapping
     @Operation(summary = "Get all orders")
     @PreAuthorize("@customSecurityExpression.hasAdminRights()")
     public List<OrderDto> getAllOrders() {
-        List<Order> orders = orderService.getAll();
-        return orderMapper.toDto(orders);
+        return orderService.getAll();
     }
 
     @GetMapping("/{userId}/orders")
     @Operation(summary = "Get all user's orders")
     @PreAuthorize("@customSecurityExpression.canAccessUser(#userId)")
     public List<OrderDto> getOrdersByUserId(@PathVariable Long userId) {
-        List<Order> orders = orderService.getAllByUserId(userId);
-        return orderMapper.toDto(orders);
+        return orderService.getAllByUserId(userId);
     }
 
     @PutMapping
     @Operation(summary = "Update order")
     @PreAuthorize("@customSecurityExpression.hasAdminRights()")
     public OrderDto update(@Validated(OnCreate.class) @RequestBody OrderDto dto) {
-        Order order = orderMapper.toEntity(dto);
-        Order updatedOrder = orderService.update(order);
-        return orderMapper.toDto(updatedOrder);
+        return orderService.update(dto);
     }
 
     @PostMapping("/{userId}/checkout")
@@ -62,9 +56,7 @@ public class OrderController {
     @PreAuthorize("@customSecurityExpression.canAccessUser(#userId)")
     public OrderDto create(@PathVariable Long userId,
                            @Validated(OnCreate.class) @RequestBody OrderDto dto) {
-        Order order = orderMapper.toEntity(dto);
-        Order createdOrder = orderService.create(order, userId);
-        return orderMapper.toDto(createdOrder);
+        return orderService.create(dto, userId);
     }
 
     @DeleteMapping("/{id}")

@@ -1,6 +1,5 @@
 package com.vasche.shoestore.web.controller;
 
-import com.vasche.shoestore.domain.shoe.Shoe;
 import com.vasche.shoestore.domain.shoe.ShoeImage;
 import com.vasche.shoestore.service.ShoeService;
 import com.vasche.shoestore.web.dto.shoe.ShoeDto;
@@ -8,10 +7,8 @@ import com.vasche.shoestore.web.dto.shoe.ShoeImageDto;
 import com.vasche.shoestore.web.dto.validation.OnCreate;
 import com.vasche.shoestore.web.dto.validation.OnUpdate;
 import com.vasche.shoestore.web.mappers.ShoeImageMapper;
-import com.vasche.shoestore.web.mappers.ShoeMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.executable.ValidateOnExecution;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -27,39 +24,32 @@ import java.util.List;
 public class ShoeController {
 
     private final ShoeService shoeService;
-    private final ShoeMapper shoeMapper;
     private final ShoeImageMapper shoeImageMapper;
 
     @GetMapping("/{id}")
     @Operation(summary = "Get shoe by id")
     public ShoeDto getById(@PathVariable Long id) {
-        Shoe shoe = shoeService.getById(id);
-        return shoeMapper.toDto(shoe);
+        return shoeService.getById(id);
     }
 
     @GetMapping
     @Operation(summary = "Get all shoes")
     public List<ShoeDto> getAllShoes() {
-        List<Shoe> shoes = shoeService.getAll();
-        return shoeMapper.toDto(shoes);
+        return shoeService.getAll();
     }
 
     @PostMapping
     @Operation(summary = "Create shoe")
     @PreAuthorize("@customSecurityExpression.hasAdminRights()")
     public ShoeDto create(@Validated(OnCreate.class) @RequestBody ShoeDto dto) {
-        Shoe shoe = shoeMapper.toEntity(dto);
-        Shoe createdShoe = shoeService.create(shoe);
-        return shoeMapper.toDto(createdShoe);
+        return shoeService.create(dto);
     }
 
     @PutMapping
     @Operation(summary = "Update shoe")
     @PreAuthorize("@customSecurityExpression.hasAdminRights()")
     public ShoeDto update(@Validated(OnUpdate.class) @RequestBody ShoeDto dto) {
-        Shoe shoe = shoeMapper.toEntity(dto);
-        Shoe updatedShoe = shoeService.update(shoe);
-        return shoeMapper.toDto(updatedShoe);
+        return shoeService.update(dto);
     }
 
     @DeleteMapping("/{id}")

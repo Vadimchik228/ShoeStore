@@ -27,8 +27,9 @@ public class MailServiceImpl implements MailService {
     public void sendEmail(User user, MailType type, Properties params) {
         switch (type) {
             case REGISTRATION -> sendRegistrationEmail(user, params);
-//            case NOTIFICATION -> sendNotificationEmail(user, params);
-            default -> {}
+            case NOTIFICATION -> sendNotificationEmail(user, params);
+            default -> {
+            }
         }
     }
 
@@ -45,18 +46,18 @@ public class MailServiceImpl implements MailService {
         mailSender.send(mimeMessage);
     }
 
-//    @SneakyThrows
-//    private void sendNotificationEmail(final User user, final Properties params) {
-//        MimeMessage mimeMessage = mailSender.createMimeMessage();
-//        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,
-//                false,
-//                "UTF-8");
-//        helper.setSubject("Your order has been delivered to the pick-up point");
-//        helper.setTo(user.getUsername());
-//        String emailContent = getNotificationEmailContent(user, params);
-//        helper.setText(emailContent, true);
-//        mailSender.send(mimeMessage);
-//    }
+    @SneakyThrows
+    private void sendNotificationEmail(final User user, final Properties params) {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,
+                false,
+                "UTF-8");
+        helper.setSubject("Your order has been delivered to the pick-up point");
+        helper.setTo(user.getUsername());
+        String emailContent = getNotificationEmailContent(user, params);
+        helper.setText(emailContent, true);
+        mailSender.send(mimeMessage);
+    }
 
     @SneakyThrows
     private String getRegistrationEmailContent(final User user, final Properties properties) {
@@ -68,15 +69,18 @@ public class MailServiceImpl implements MailService {
         return writer.getBuffer().toString();
     }
 
-//    @SneakyThrows
-//    private String getNotificationEmailContent(final User user, final Properties properties) {
-//        StringWriter writer = new StringWriter();
-//        Map<String, Object> model = new HashMap<>();
-//        model.put("name", user.getName());
-//        model.put("title", properties.getProperty("task.title"));
-//        model.put("description", properties.getProperty("task.description"));
-//        configuration.getTemplate("reminder.ftlh")
-//                .process(model, writer);
-//        return writer.getBuffer().toString();
-//    }
+    @SneakyThrows
+    private String getNotificationEmailContent(final User user, final Properties properties) {
+        StringWriter writer = new StringWriter();
+        Map<String, Object> model = new HashMap<>();
+        model.put("name", user.getName());
+        model.put("city", properties.getProperty("city"));
+        model.put("address", properties.getProperty("address"));
+        model.put("title", properties.getProperty("title"));
+//        model.put("quantity", properties.getProperty("quantity"));
+
+        configuration.getTemplate("notifier.ftlh")
+                .process(model, writer);
+        return writer.getBuffer().toString();
+    }
 }

@@ -1,18 +1,19 @@
 package com.vasche.shoestore.service;
 
 import com.vasche.shoestore.domain.cartItem.CartItem;
+import com.vasche.shoestore.web.dto.cartItem.CartItemDto;
 
 import java.util.List;
 
 public interface CartItemService {
 
-    CartItem getById(Long id);
+    CartItemDto getById(Long id);
 
-    List<CartItem> getAllByUserId(Long userId);
+    List<CartItemDto> getAllByUserId(Long userId);
 
-    CartItem update(CartItem cartItem);
+    CartItemDto update(CartItemDto cartItemDto);
 
-    CartItem create(CartItem cartItem, Long userId);
+    CartItemDto create(CartItemDto cartItemDto, Long userId);
 
     void delete(Long id);
 

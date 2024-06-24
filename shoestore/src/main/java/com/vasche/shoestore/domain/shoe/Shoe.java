@@ -3,8 +3,6 @@ package com.vasche.shoestore.domain.shoe;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -16,10 +14,7 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "shoes")
-public class Shoe implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 2L;
+public class Shoe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

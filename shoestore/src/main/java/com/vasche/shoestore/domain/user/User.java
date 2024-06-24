@@ -4,6 +4,7 @@ import com.vasche.shoestore.domain.cartItem.CartItem;
 import com.vasche.shoestore.domain.order.Order;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -20,9 +21,6 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,11 +39,13 @@ public class User implements Serializable {
     @Enumerated(value = EnumType.STRING)
     private Set<Role> roles;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "carts", inverseJoinColumns = @JoinColumn(name = "cart_item_id"))
-    private List<CartItem> cartItems;
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private List<CartItem> cartItems = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<Order> orders = new ArrayList<>();
 
 }

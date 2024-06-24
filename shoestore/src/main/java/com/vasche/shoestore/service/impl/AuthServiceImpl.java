@@ -1,8 +1,8 @@
 package com.vasche.shoestore.service.impl;
 
 import com.vasche.shoestore.domain.user.User;
+import com.vasche.shoestore.repository.UserRepository;
 import com.vasche.shoestore.service.AuthService;
-import com.vasche.shoestore.service.UserService;
 import com.vasche.shoestore.web.dto.auth.JwtRequest;
 import com.vasche.shoestore.web.dto.auth.JwtResponse;
 import com.vasche.shoestore.web.security.JwtTokenProvider;
@@ -11,12 +11,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -26,16 +28,19 @@ public class AuthServiceImpl implements AuthService {
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsername(), loginRequest.getPassword())
         );
-        User user = userService.getByUsername(loginRequest.getUsername());
-        jwtResponse.setId(user.getId());
-        jwtResponse.setUsername(user.getUsername());
-        jwtResponse.setAccessToken(jwtTokenProvider.createAccessToken(
-                user.getId(), user.getUsername(), user.getRoles())
-        );
-        jwtResponse.setRefreshToken(jwtTokenProvider.createRefreshToken(
-                user.getId(), user.getUsername())
-        );
-        return jwtResponse;
+        Optional<User> user = userRepository.findByUsername(loginRequest.getUsername());
+        if (user.isPresent()) {
+            jwtResponse.setId(user.get().getId());
+            jwtResponse.setUsername(user.get().getUsername());
+            jwtResponse.setAccessToken(jwtTokenProvider.createAccessToken(
+                    user.get().getId(), user.get().getUsername(), user.get().getRoles())
+            );
+            jwtResponse.setRefreshToken(jwtTokenProvider.createRefreshToken(
+                    user.get().getId(), user.get().getUsername())
+            );
+            return jwtResponse;
+        }
+        return null;
     }
 
     @Override
