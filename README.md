@@ -31,19 +31,35 @@
 
 ### Пользователь
 
-- Регистрация (сообщение об успешной регистрации приходит на почту) 
+- Регистрация 
 - Вход в систему
 - Редактирование информации о себе
 - Просмотр список всех товаров
 - Добавление товара в корзину
 - Удаление товара из корзины
-- Осуществление заказа выбранных товаров (сообщение о пришедшем на ПВЗ товаре приодит на почту)
+- Осуществление заказа выбранных товаров 
 - Выход из системы
 
 ## База данных
 
 В качестве базы данных в приложении используется Postgres. ER-диаграмма изображена на рисунке:
-<img src="shoestore/images/diagram.png" alt="db"/>
+<img src="shoestore/images/diag.png" alt="db"/>
+
+## Rest API
+
+В качестве API были реализованы следующие методы, которые изображены на рисунке:
+<img src="shoestore/images/shoeController.png" alt="shoeContr"/>
+<img src="shoestore/images/userControllerAndOrderItemController.png" alt="userOrderItemContr"/>
+<img src="shoestore/images/authControllerAndOrderController.png" alt="authContr"/>
+<img src="shoestore/images/cartItemController.png" alt="cartItemContr"/>
+
+## Email
+
+Пример получения сообщения на почту в случае успешной регистрации:
+<img src="shoestore/images/messageRegistration.png" alt="messReg"/>
+
+Пример получения сообщения на почту в случае прибытия заказанного товара на ПВЗ:
+<img src="shoestore/images/messageNotification.png" alt="messNot"/>
 
 ## Связь
 
