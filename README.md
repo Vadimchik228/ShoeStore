@@ -6,7 +6,7 @@
 
 ## Стек
 
-`Java 17`, `Maven`, `Spring (Web, Data, Security)`, `PostrgreSQL`, `Liquibase`, `JWT`, `MapStruct`, `Lombok`, `TestContainers`, `Mockito`, `Swagger`, `Docker`, `Minio`, `Mail`
+`Java 17`, `Maven`, `Spring (Web, Data, Security)`, `PostrgreSQL`, `Hibernate`, `Liquibase`, `JWT`, `MapStruct`, `Lombok`, `TestContainers`, `Mockito`, `Swagger`, `Docker`, `Minio`, `Mail`
 
 
 ## Реализованый функционал
