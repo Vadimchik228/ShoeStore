@@ -42,7 +42,7 @@
 ## База данных
 
 В качестве базы данных в приложении используется Postgres. ER-диаграмма изображена на рисунке:
-<img src="shoestore/images/diagram.png" alt="database"/>
+<img src="shoestore/images/diagram.png" alt="db"/>
 
 ## Связь
 
