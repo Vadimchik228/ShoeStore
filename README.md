@@ -6,7 +6,7 @@
 
 ## Стек
 
-`Java 17`, `Maven`, `Spring (Web, Data, Security)`, `PostrgreSQL`, `Liquibase`, `JWT`, `MapStruct`, `Lombok`, `TestContainers`, `Mockito`, `Swagger`, `Docker`, `Redis`
+`Java 17`, `Maven`, `Spring (Web, Data, Security)`, `PostrgreSQL`, `Liquibase`, `JWT`, `MapStruct`, `Lombok`, `TestContainers`, `Mockito`, `Swagger`, `Docker`, `Minio`, `Mail`
 
 
 ## Реализованый функционал
@@ -31,18 +31,19 @@
 
 ### Пользователь
 
+- Регистрация (сообщение об успешной регистрации приходит на почту) 
 - Вход в систему
 - Редактирование информации о себе
 - Просмотр список всех товаров
 - Добавление товара в корзину
-- Возможность удаления товара из корзины
-- Осуществление заказа выбранных товаров
+- Удаление товара из корзины
+- Осуществление заказа выбранных товаров (сообщение о пришедшем на ПВЗ товаре приодит на почту)
 - Выход из системы
 
 ## База данных
 
 В качестве базы данных в приложении используется Postgres. ER-диаграмма изображена на рисунке:
-<img src="shoestore/images/diagram.png" alt="database"/>
+<img src="shoestore/images/diagram.png" alt="db"/>
 
 ## Связь
 
